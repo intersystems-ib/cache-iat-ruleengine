@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.Condition">
+<Super>%RegisteredObject,%XML.Adaptor</Super>
+<TimeCreated>63698,32511.589252</TimeCreated>
+
+<Property name="Expr">
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
+</Property>
+</Class>
+</Export>

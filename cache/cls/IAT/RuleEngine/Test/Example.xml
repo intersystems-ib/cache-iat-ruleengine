@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.Test.Example">
+<Super>%RegisteredObject</Super>
+<TimeCreated>63694,54812.605674</TimeCreated>
+
+<Method name="Run">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ret = $$$OK
+	try {
+		// create a patient
+		set p = ##class(Patient).%New()
+		set p.MRN="1234", p.Name="John", p.Surname="Snow", p.DOB=$zdh("1975-05-07",3)
+		
+		// create a rule context, set data
+		set context = ##class(PatientContext).%New()
+		set context.Patient = p
+		
+		// evaluate Patient Alerts Rule
+		set ruleEngine = ##class(IAT.RuleEngine.Engine).%New()
+		$$$TOE(sc, ruleEngine.Evaluate("IAT.RuleEngine.Test.PatientAlertsRule", context, .log))
+		
+		// print log
+		write !,"Rule log:",!
+		zwrite log
+	} catch ex {
+		set ret = ex.AsStatus()
+		do $system.Status.DisplayError(ret)
+	}
+	quit ret
+]]></Implementation>
+</Method>
+</Class>
+</Export>

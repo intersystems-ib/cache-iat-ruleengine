@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.Test.Utils">
+<Super>%RegisteredObject</Super>
+<TimeCreated>63698,32927.646223</TimeCreated>
+
+<Method name="ShowObject">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>object:%RegisteredObject</FormalSpec>
+<Implementation><![CDATA[
+	write !,"=======================",!
+	write "ShowObject",!
+	do $system.OBJ.Dump(object)
+	write "=======================",!
+]]></Implementation>
+</Method>
+
+<Method name="SendEmail">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pTo:%String,pBody:%String</FormalSpec>
+<Implementation><![CDATA[
+	write !,"=======================",!
+	write "SendEmail",!
+	write "To:",pTo,!
+	write "Body:",!
+	write pBody,!
+	write "=======================",!
+]]></Implementation>
+</Method>
+</Class>
+</Export>

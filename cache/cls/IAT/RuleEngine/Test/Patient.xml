@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.Test.Patient">
+<Super>%RegisteredObject</Super>
+<TimeCreated>63694,51381.525962</TimeCreated>
+
+<Property name="MRN">
+<Type>%String</Type>
+</Property>
+
+<Property name="Name">
+<Type>%String</Type>
+</Property>
+
+<Property name="Surname">
+<Type>%String</Type>
+</Property>
+
+<Property name="DOB">
+<Type>%Date</Type>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.Action">
+<Super>%RegisteredObject,%XML.Adaptor</Super>
+<TimeCreated>63698,32525.871507</TimeCreated>
+
+<Property name="Type">
+<Type>%String</Type>
+<Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
+</Property>
+
+<Property name="Class">
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
+</Property>
+
+<Property name="Method">
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
+</Property>
+
+<Property name="Args">
+<Type>%String</Type>
+<Parameter name="MAXLEN"/>
+<Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
+</Property>
+</Class>
+</Export>

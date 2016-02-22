@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.Definition">
+<Description>
+Abstract rule representation</Description>
+<Abstract>1</Abstract>
+<IncludeCode>IAT.RuleEngine</IncludeCode>
+<Super>%RegisteredObject,%XML.Adaptor</Super>
+<TimeCreated>63694,46672.128224</TimeCreated>
+
+<Property name="Identifier">
+<Type>%String</Type>
+<Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
+</Property>
+
+<Property name="Rules">
+<Type>Rule</Type>
+<Collection>list</Collection>
+</Property>
+
+<XData name="XMLData">
+<Description>
+XML Rule definition</Description>
+<Data><![CDATA[
+<Definition>
+</Definition>
+]]></Data>
+</XData>
+
+<Method name="Evaluate">
+<Description><![CDATA[
+Evaluate rule definition
+<ul>
+<li>context=context used by rule, should contains all information needed to evaluate the rule</li>
+<li>log=log of rule evaluation (return as a local array)</li>
+</ul>]]></Description>
+<ClassMethod>1</ClassMethod>
+<CodeMode>objectgenerator</CodeMode>
+<FormalSpec>context:Context,*log</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	// do not generate code for main abstract class
+	if %class.Name="IAT.RuleEngine.Definition" quit $$$OK
+	
+	// get rule definition in XMLData
+	//   other way: ##class(%Dictionary.CompiledXData).IDKEYOpen($classname(),"XMLData").Data
+	set index = %compiledclass.XDatas.FindObjectId(%class.Name_"||XMLData")
+	set xml = %compiledclass.XDatas.GetAt(index).Data
+	
+	// parse rule definition XML into an object
+	set reader = ##class(%XML.Reader).%New()  	  	
+	$$$TOE(sc, reader.OpenStream(xml))
+	do reader.Correlate("Definition",%class.Name)
+	do reader.Next(.def, .sc)
+	if $$$ISERR(sc) $$$ThrowStatus(sc)
+	
+	// local array to store generated code lines
+	kill code
+	$$$TOE(sc, ..GenerateHeader(.code))
+	
+	// code for each rule 
+	for i=1:1:def.Rules.Size {
+		set rule = def.Rules.GetAt(i)
+		$$$TOE(sc, ..GenerateRule(.code, rule))
+	}
+	$$$TOE(sc, ..GenerateFooter(.code))
+	
+	// dump code lines into actual generated code
+	set i=""
+	for {
+		set i=$order(code(i))
+		quit:i=""
+		set line=code(i)
+		do %code.WriteLine(line)
+	}
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GenerateHeader">
+<Description>
+Header for rule generated code</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>*code</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ret = $$$OK
+	try {
+		$$$AddLine(code, " #define AddLog(%line) set log($i(log))=""[""_$zdatetime($ztimestamp,3)_""] ""_%line")
+		$$$AddLine(code, " set ret=$$$OK")
+		$$$AddLine(code, " try {")
+	} catch ex {
+		set ret = ex.AsStatus()
+	}
+	quit ret
+]]></Implementation>
+</Method>
+
+<Method name="GenerateFooter">
+<Description>
+Footer for rule generated code</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>*code</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ret = $$$OK
+	try {
+		$$$AddLine(code, " } catch ex {")
+		$$$AddLine(code, "   set ret = ex.AsStatus()")
+		$$$AddLine(code, " }")
+		$$$AddLine(code, " quit ret")
+	} catch ex {
+		set ret = ex.AsStatus()
+	}
+	quit ret
+]]></Implementation>
+</Method>
+
+<Method name="GenerateRule">
+<Description>
+Code for each rule of rule definition</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>*code,rule:IAT.RuleEngine.Rule</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ret = $$$OK
+	try {
+		$$$AddLine(code, "  if ("_rule.Condition.Expr_") {")
+		$$$AddLine(code, "    $$$AddLog(""Rule: "_rule.Name_""")")
+		
+		for i=1:1:rule.Actions.Size {
+			#dim action As IAT.RuleEngine.Action = rule.Actions.GetAt(i)
+			$$$AddLine(code, "    $$$AddLog(""Action: "_i_""")")
+			
+			if action.Type="call" {
+				$$$AddLine(code, "    do $classmethod("""_action.Class_""", """_action.Method_""", "_action.Args_")")
+			}
+			elseif action.Type="return" {
+				$$$AddLine(code, "    quit ")
+			}	
+		}
+		$$$AddLine(code, "  }")
+		
+	} catch ex {
+		set ret = ex.AsStatus()
+	}
+	quit ret
+]]></Implementation>
+</Method>
+</Class>
+</Export>

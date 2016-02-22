@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.Test.PatientContext">
+<Super>IAT.RuleEngine.Context</Super>
+<TimeCreated>63694,51412.95253</TimeCreated>
+
+<Property name="Patient">
+<Type>Patient</Type>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.Rule">
+<Super>%RegisteredObject,%XML.Adaptor</Super>
+<TimeCreated>63698,32556.158599</TimeCreated>
+
+<Property name="Name">
+<Type>%String</Type>
+<Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
+</Property>
+
+<Property name="Condition">
+<Type>Condition</Type>
+</Property>
+
+<Property name="Actions">
+<Type>Action</Type>
+<Collection>list</Collection>
+</Property>
+</Class>
+</Export>
