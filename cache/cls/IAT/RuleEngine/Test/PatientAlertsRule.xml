@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="IAT.RuleEngine.Test.PatientAlertsRule">
-<Super>IAT.RuleEngine.Definition</Super>
+<Super>IAT.RuleEngine.Engine</Super>
 <TimeCreated>63698,32126.31169</TimeCreated>
 
 <XData name="XMLData">
+<XMLNamespace>RuleEngine</XMLNamespace>
 <Data><![CDATA[
 <Definition Identifier="PatientAlerts">
-	<Rules>
-		<Rule Name="Not young anymore!">
-			<Condition Expr="context.Patient.DOB &gt; $horolog-30"/>
-			<Actions>
-				<Action Type="call" Class="IAT.RuleEngine.Test.Utils" Method="SendEmail" Args="&quot;test@server.com&quot;,&quot;Patient is so old!&quot;"/>
-				<Action Type="call" Class="IAT.RuleEngine.Test.Utils" Method="ShowObject" Args="context.Patient"/>
-				<Action Type="return"/>
-			</Actions>
-		</Rule>
-	</Rules>
+<Rule Title="Not young anymore!" Condition="context.Patient.DOB &gt; $horolog-30">
+<Action Type="call" Class="IAT.RuleEngine.Test.Utils" Method="SendEmail" Args="&quot;test@server.com&quot;,&quot;Patient is so old!&quot;"/>
+<Action Type="call" Class="IAT.RuleEngine.Test.Utils" Method="ShowObject" Args="context.Patient"/>
+<Action Type="return"/>
+</Rule>
 </Definition>
 ]]></Data>
 </XData>

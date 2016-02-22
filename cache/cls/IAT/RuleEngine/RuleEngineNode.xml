@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.RuleEngineNode">
+<Abstract>1</Abstract>
+<Super>%RegisteredObject,%XGEN.AbstractNode</Super>
+<System>3</System>
+<TimeCreated>63970,84567.692914</TimeCreated>
+
+<Parameter name="NAMESPACE">
+<Default>RuleEngine</Default>
+</Parameter>
+
+<Parameter name="XMLIGNORENULL">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="XMLIGNOREINVALIDATTRIBUTE">
+<Description>
+By setting this to 0, we disallow use of invalid attribute names in Zen Report XML documents.</Description>
+<Default>0</Default>
+</Parameter>
+
+<Parameter name="XMLFORMAT">
+<Description><![CDATA[
+If XMLFORMAT="Literal", then only support for literal format import and export is generated.<br>]]></Description>
+<Default>Literal</Default>
+</Parameter>
+</Class>
+</Export>
