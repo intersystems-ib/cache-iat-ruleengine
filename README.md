@@ -96,3 +96,12 @@ log(4)="[2016-02-22 16:29:44] Action: 3"
 Have a look at [InterSystems Developer Community](https://community.intersystems.com/) to learn about InterSystems technology, sharing solutions and staying up-to-date on the latest developments.
 
 This example was published in https://community.intersystems.com/post/object-generators-homemade-ruleengine
+
+# Contributions
+## %XGEN.AbstractDocument implementation
+Dmitry Maslennikov (https://github.com/daimor) has uploaded a very interesting alternative approach which uses *%XGEN.AbstractDocument* class to process the XData.
+
+The code is available in [/pr/xgen](https://github.com/intersystems-ib/cache-iat-ruleengine/tree/pr/xgen) branch.
+
+Additional information is available here:
+https://community.intersystems.com/post/xdata-studio-asist
