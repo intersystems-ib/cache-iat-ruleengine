@@ -2,23 +2,22 @@
 <Export generator="Cache" version="25">
 <Class name="IAT.RuleEngine.Engine">
 <Super>%RegisteredObject</Super>
+<System>3</System>
 <TimeCreated>63694,52301.503851</TimeCreated>
 
+<XData name="XMLData">
+<XMLNamespace>RuleEngine</XMLNamespace>
+<Data><![CDATA[
+<Definition>
+</Definition>
+]]></Data>
+</XData>
+
 <Method name="Evaluate">
-<Description>
-Evaluate a rule</Description>
-<FormalSpec>ruleId:%String,context:Context,*log</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set ret = $$$OK
-	try {
-		set log=""
-		set sc = $classmethod(ruleId, "Evaluate", context, .log)
-		if $$$ISERR(sc) $$$ThrowStatus(sc)
-	} catch ex {
-		set ret = ex.AsStatus()
-	}
-	quit ret
+<ClassMethod>1</ClassMethod>
+<CodeMode>objectgenerator</CodeMode>
+<FormalSpec>context,log</FormalSpec>
+<Implementation><![CDATA[    Quit ##class(IAT.RuleEngine.Definition).%Generate(%compiledclass, %code, "XMLData")
 ]]></Implementation>
 </Method>
 </Class>

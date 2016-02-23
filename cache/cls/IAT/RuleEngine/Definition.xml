@@ -3,19 +3,34 @@
 <Class name="IAT.RuleEngine.Definition">
 <Description>
 Abstract rule representation</Description>
-<Abstract>1</Abstract>
 <IncludeCode>IAT.RuleEngine</IncludeCode>
-<Super>%RegisteredObject,%XML.Adaptor</Super>
+<Super>%XGEN.AbstractDocument</Super>
+<System>3</System>
 <TimeCreated>63694,46672.128224</TimeCreated>
+
+<Parameter name="NAMESPACE">
+<Default>RuleEngine</Default>
+</Parameter>
+
+<Parameter name="XMLNAMESPACE">
+<Default>RuleEngine</Default>
+</Parameter>
+
+<Parameter name="ROOTCLASSES">
+<Type>STRING</Type>
+<Default>IAT.RuleEngine.Definition:Definition</Default>
+</Parameter>
 
 <Property name="Identifier">
 <Type>%String</Type>
+<Parameter name="MAXLEN" value="200"/>
 <Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
 </Property>
 
 <Property name="Rules">
 <Type>Rule</Type>
 <Collection>list</Collection>
+<Parameter name="XMLPROJECTION" value="ELEMENT"/>
 </Property>
 
 <XData name="XMLData">
@@ -27,125 +42,58 @@ XML Rule definition</Description>
 ]]></Data>
 </XData>
 
-<Method name="Evaluate">
+<Method name="%OnBeforeGenerateCode">
 <Description><![CDATA[
-Evaluate rule definition
-<ul>
-<li>context=context used by rule, should contains all information needed to evaluate the rule</li>
-<li>log=log of rule evaluation (return as a local array)</li>
-</ul>]]></Description>
-<ClassMethod>1</ClassMethod>
-<CodeMode>objectgenerator</CodeMode>
-<FormalSpec>context:Context,*log</FormalSpec>
+This method is called when a class containing an XGEN
+document is compiled. It is called <em>before</em> the <method>%GenerateCode</method> method
+processes its children.<br>
+<var>pTargetClass</var> is the class that contains the XGEN document.<br/>
+<var>pCode</var> is a stream containing the generated code.<br/>
+<var>pDocument</var> is the top-level XGEN document object that contains this node.<br/>
+A subclass can provide an implementation of this method that will
+generate specific lines of code.<br/>]]></Description>
+<FormalSpec>pTargetClass:%Dictionary.CompiledClass,pCode:%Stream.TmpCharacter,pDocument:%XGEN.AbstractDocument</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	// do not generate code for main abstract class
-	if %class.Name="IAT.RuleEngine.Definition" quit $$$OK
-	
-	// get rule definition in XMLData
-	//   other way: ##class(%Dictionary.CompiledXData).IDKEYOpen($classname(),"XMLData").Data
-	set index = %compiledclass.XDatas.FindObjectId(%class.Name_"||XMLData")
-	set xml = %compiledclass.XDatas.GetAt(index).Data
-	
-	// parse rule definition XML into an object
-	set reader = ##class(%XML.Reader).%New()  	  	
-	$$$TOE(sc, reader.OpenStream(xml))
-	do reader.Correlate("Definition",%class.Name)
-	do reader.Next(.def, .sc)
-	if $$$ISERR(sc) $$$ThrowStatus(sc)
-	
-	// local array to store generated code lines
-	kill code
-	$$$TOE(sc, ..GenerateHeader(.code))
-	
-	// code for each rule 
-	for i=1:1:def.Rules.Size {
-		set rule = def.Rules.GetAt(i)
-		$$$TOE(sc, ..GenerateRule(.code, rule))
-	}
-	$$$TOE(sc, ..GenerateFooter(.code))
-	
-	// dump code lines into actual generated code
-	set i=""
-	for {
-		set i=$order(code(i))
-		quit:i=""
-		set line=code(i)
-		do %code.WriteLine(line)
-	}
-	
-	quit $$$OK
+
+    do pCode.WriteLine("#define AddLog(%line) set log($i(log))=""[""_$zdatetime($ztimestamp,3)_""] ""_%line")
+    do pCode.WriteLine(..%Indent(1) _ "set ret=$$$OK")
+    do pCode.WriteLine(..%Indent(1) _ "try {")
+    quit $$$OK
 ]]></Implementation>
 </Method>
 
-<Method name="GenerateHeader">
-<Description>
-Header for rule generated code</Description>
-<ClassMethod>1</ClassMethod>
-<FormalSpec>*code</FormalSpec>
+<Method name="%OnAfterGenerateCode">
+<Description><![CDATA[
+This method is called when a class containing an XGEN
+document is compiled. It is called <em>after</em> the <method>%GenerateCode</method> method
+processes its children.<br>
+<var>pTargetClass</var> is the class that contains the XGEN document.<br/>
+<var>pCode</var> is a stream containing the generated code.<br/>
+<var>pDocument</var> is the top-level XGEN document object that contains this node.<br/>
+A subclass can provide an implementation of this method that will
+generate specific lines of code.<br/>]]></Description>
+<FormalSpec>pTargetClass:%Dictionary.CompiledClass,pCode:%Stream.TmpCharacter,pDocument:%XGEN.AbstractDocument</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set ret = $$$OK
-	try {
-		$$$AddLine(code, " #define AddLog(%line) set log($i(log))=""[""_$zdatetime($ztimestamp,3)_""] ""_%line")
-		$$$AddLine(code, " set ret=$$$OK")
-		$$$AddLine(code, " try {")
-	} catch ex {
-		set ret = ex.AsStatus()
-	}
-	quit ret
+    do pCode.WriteLine(..%Indent(1) _ "} catch ex {")
+    do pCode.WriteLine(..%Indent(2) _ "set ret = ex.AsStatus()")
+    do pCode.WriteLine(..%Indent(1) _ "}")
+    do pCode.WriteLine(..%Indent(1) _ "quit ret")
+    quit $$$OK
 ]]></Implementation>
 </Method>
 
-<Method name="GenerateFooter">
-<Description>
-Footer for rule generated code</Description>
+<Method name="GetXMLElementsForClass">
+<Description><![CDATA[
+Return an array of XML element names that could be used within a
+document wherever <var>pClass</var> is expected.]]></Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>*code</FormalSpec>
+<FormalSpec>pClass:%String,*pElements</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set ret = $$$OK
-	try {
-		$$$AddLine(code, " } catch ex {")
-		$$$AddLine(code, "   set ret = ex.AsStatus()")
-		$$$AddLine(code, " }")
-		$$$AddLine(code, " quit ret")
-	} catch ex {
-		set ret = ex.AsStatus()
-	}
-	quit ret
-]]></Implementation>
-</Method>
-
-<Method name="GenerateRule">
-<Description>
-Code for each rule of rule definition</Description>
-<ClassMethod>1</ClassMethod>
-<FormalSpec>*code,rule:IAT.RuleEngine.Rule</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set ret = $$$OK
-	try {
-		$$$AddLine(code, "  if ("_rule.Condition.Expr_") {")
-		$$$AddLine(code, "    $$$AddLog(""Rule: "_rule.Name_""")")
-		
-		for i=1:1:rule.Actions.Size {
-			#dim action As IAT.RuleEngine.Action = rule.Actions.GetAt(i)
-			$$$AddLine(code, "    $$$AddLog(""Action: "_i_""")")
-			
-			if action.Type="call" {
-				$$$AddLine(code, "    do $classmethod("""_action.Class_""", """_action.Method_""", "_action.Args_")")
-			}
-			elseif action.Type="return" {
-				$$$AddLine(code, "    quit ")
-			}	
-		}
-		$$$AddLine(code, "  }")
-		
-	} catch ex {
-		set ret = ex.AsStatus()
-	}
-	quit ret
+    If pClass="%XGEN.AbstractNode" Quit $$$OK
+    Quit ##super(pClass, .pElements)
 ]]></Implementation>
 </Method>
 </Class>

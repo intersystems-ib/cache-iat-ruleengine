@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="IAT.RuleEngine.Sequence">
+<Abstract>1</Abstract>
+<Super>%XGEN.AbstractSequence</Super>
+<System>3</System>
+<TimeCreated>63970,84713.251103</TimeCreated>
+
+<Parameter name="NAMESPACE">
+<Default>RuleEngine</Default>
+</Parameter>
+
+<Parameter name="XGENDOCUMENT">
+<Default>IAT.RuleEngine.Test.Definition</Default>
+</Parameter>
+
+<Parameter name="XMLFORMAT">
+<Description>
+Reduces the amount of generated code</Description>
+<Default>literal</Default>
+</Parameter>
+</Class>
+</Export>

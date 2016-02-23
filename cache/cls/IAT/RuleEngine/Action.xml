@@ -1,30 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="IAT.RuleEngine.Action">
-<Super>%RegisteredObject,%XML.Adaptor</Super>
+<Super>RuleEngineNode</Super>
+<System>3</System>
 <TimeCreated>63698,32525.871507</TimeCreated>
+
+<Parameter name="NAMESPACE">
+<Default>RuleEngine</Default>
+</Parameter>
 
 <Property name="Type">
 <Type>%String</Type>
+<Parameter name="VALUELIST" value=",call,return"/>
 <Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
 </Property>
 
 <Property name="Class">
 <Type>%String</Type>
-<Parameter name="MAXLEN"/>
 <Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
 </Property>
 
 <Property name="Method">
 <Type>%String</Type>
-<Parameter name="MAXLEN"/>
 <Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
 </Property>
 
 <Property name="Args">
 <Type>%String</Type>
-<Parameter name="MAXLEN"/>
 <Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
 </Property>
+
+<Method name="%OnGenerateCode">
+<Description><![CDATA[
+Generate code for this node.<br/>
+This method is called when a class containing an XGEN
+document is compiled.<br/>
+<var>pTargetClass</var> is the class that contains the XGEN document.<br/>
+<var>pCode</var> is a stream containing the generated code.<br/>
+<var>pDocument</var> is the top-level XGEN document object that contains this node.<br/>
+A subclass will provide an implementation of this method that will
+generate specific lines of code.<br/>
+For example:
+<example>
+Do pCode.WriteLine(..%Indent()_"Set " _ ..target _ "=" _ $$$quote(..value))
+</example>]]></Description>
+<FormalSpec>pTargetClass:%Dictionary.CompiledClass,pCode:%Stream.TmpCharacter,pDocument:%XGEN.AbstractDocument</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    do pCode.WriteLine(..%Indent()_"$$$AddLog(""Action: ""_$i(actionCounter))")
+    if ..Type="call" {
+        do pCode.WriteLine(..%Indent() _ "do $classmethod("_$$$quote(..Class)_", "_$$$quote(..Method)_", "_..Args_")")
+    }
+    elseif ..Type="return" {
+        do pCode.WriteLine(..%Indent() _ "quit ")
+    }   
+    Quit $$$OK
+]]></Implementation>
+</Method>
 </Class>
 </Export>

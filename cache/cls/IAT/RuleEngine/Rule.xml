@@ -1,21 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="IAT.RuleEngine.Rule">
-<Super>%RegisteredObject,%XML.Adaptor</Super>
+<Super>Sequence</Super>
 <TimeCreated>63698,32556.158599</TimeCreated>
 
-<Property name="Name">
+<Property name="Title">
 <Type>%String</Type>
 <Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
 </Property>
 
 <Property name="Condition">
-<Type>Condition</Type>
+<Type>%String</Type>
+<Parameter name="XMLPROJECTION" value="ATTRIBUTE"/>
 </Property>
 
 <Property name="Actions">
 <Type>Action</Type>
 <Collection>list</Collection>
+<Parameter name="XMLPROJECTION" value="ELEMENT"/>
 </Property>
+
+<Method name="%OnBeforeGenerateCode">
+<Description><![CDATA[
+This method is called when a class containing an XGEN
+document is compiled. It is called <em>before</em> the <method>%GenerateCode</method> method
+processes its children.<br>
+<var>pTargetClass</var> is the class that contains the XGEN document.<br/>
+<var>pCode</var> is a stream containing the generated code.<br/>
+<var>pDocument</var> is the top-level XGEN document object that contains this node.<br/>
+A subclass can provide an implementation of this method that will
+generate specific lines of code.<br/>]]></Description>
+<FormalSpec>pTargetClass:%Dictionary.CompiledClass,pCode:%Stream.TmpCharacter,pDocument:%XGEN.AbstractDocument</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    do pCode.WriteLine(..%Indent()_"If ("_..Condition_") { set actionCounter=0 ")
+    do pCode.WriteLine(..%Indent(1)_"$$$AddLog(""Rule: "_..Title_" "")")
+    quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="%OnAfterGenerateCode">
+<Description><![CDATA[
+This method is called when a class containing an XGEN
+document is compiled. It is called <em>after</em> the <method>%GenerateCode</method> method
+processes its children.<br>
+<var>pTargetClass</var> is the class that contains the XGEN document.<br/>
+<var>pCode</var> is a stream containing the generated code.<br/>
+<var>pDocument</var> is the top-level XGEN document object that contains this node.<br/>
+A subclass can provide an implementation of this method that will
+generate specific lines of code.<br/>]]></Description>
+<FormalSpec>pTargetClass:%Dictionary.CompiledClass,pCode:%Stream.TmpCharacter,pDocument:%XGEN.AbstractDocument</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    do pCode.WriteLine(..%Indent()_"}")
+    quit $$$OK
+]]></Implementation>
+</Method>
 </Class>
 </Export>
